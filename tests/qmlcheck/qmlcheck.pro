@@ -23,13 +23,13 @@
 #
 # Build (out-of-source, so the harness never touches the app tree):
 #   cd build && \
-#     /home/user/qt56-toolchain/install/bin/qmake ../qmlcheck.pro && make -j4
+#     ${QT56_ROOT:-$HOME/qt56-toolchain}/install/bin/qmake ../qmlcheck.pro && make -j4
 # Run (import paths are relative to the CWD, and the app is three levels up
 # from build/ - see the note on -frtti below for why the bare `qmake` on PATH
 # must not be used):
 #   QT_QPA_PLATFORM=offscreen \
-#   QMLCHECK_IMPORT_PATHS=/home/user/qt56-toolchain/qmltest/stubs:/home/user/progressive-android-qt/imports \
-#   QMLCHECK_RCC=/home/user/qt56-toolchain/qmltest/test.rcc ./qmlcheck t_*.qml
+#   QMLCHECK_IMPORT_PATHS=${QT56_ROOT:-$HOME/qt56-toolchain}/qmltest/stubs:${PROGRESSIVE_QT:-$HOME/progressive-android-qt}/imports \
+#   QMLCHECK_RCC=${QT56_ROOT:-$HOME/qt56-toolchain}/qmltest/test.rcc ./qmlcheck t_*.qml
 #
 # Tests that step through several states need a longer event loop than the
 # default 60ms settle, or they stop part-way and still report RESULT:PASS:
