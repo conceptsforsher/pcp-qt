@@ -1,10 +1,10 @@
 QT += network
-# NOTE (Progressive Chat Qt): multimedia is optional (minimal Qt builds,
+# NOTE (PCP Qt): multimedia is optional (minimal Qt builds,
 # e.g. without QtMultimedia). roommessageevent.cpp degrades gracefully.
 qtHaveModule(multimedia) {
     QT += multimedia
 } else {
-    DEFINES += PROGRESSIVE_NO_LIBMULTIMEDIA
+    DEFINES += PCP_NO_LIBMULTIMEDIA
 }
 CONFIG += c++14 warn_on rtti_off create_prl object_parallel_to_source
 

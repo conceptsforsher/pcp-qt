@@ -2,16 +2,16 @@ import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
 // NOTE (Qt 5.6 port): Qt.labs.platform / Qt.labs.settings do not exist on
-// Qt 5.6, so the tray icon lives in Progressive.Compat.TrayIcon (loaded
-// lazily, ignored when unavailable) and settings in Progressive.Setting
+// Qt 5.6, so the tray icon lives in PCP.Compat.TrayIcon (loaded
+// lazily, ignored when unavailable) and settings in PCP.Setting
 // (LocalStorage-backed, no labs dependency). See COMPAT/Qt56.md.
 
-import Progressive.Component 2.0
-import Progressive.Page 2.0
-import Progressive.Style 0.1
+import PCP.Component 2.0
+import PCP.Page 2.0
+import PCP.Style 0.1
 
-import Progressive 0.1
-import Progressive.Setting 0.1
+import PCP 0.1
+import PCP.Setting 0.1
 
 import "qrc:/js/util.js" as Util
 
@@ -26,22 +26,22 @@ ApplicationWindow {
     id: window
 
     visible: true
-    title: qsTr("Progressive Chat")
+    title: qsTr("PCP")
 
     // FORK-ONLY: keep Qt's application palette in step with our own theme.
     // Controls 1 Labels default to SystemPalette.windowText, i.e. they follow
     // the *desktop's* colour scheme. On a dark-themed desktop that is white,
     // which on this app's light backgrounds means invisible text - the room
-    // list rendered avatars with unreadable names. progressiveApplyTheme()
+    // list rendered avatars with unreadable names. pcpApplyTheme()
     // lives in src/themepalette.h; the harness stubs it (see t_palette.qml).
     function applyAppTheme() {
-        // progressiveApplyTheme is a QObject (src/themepalette.h), not a
+        // pcpApplyTheme is a QObject (src/themepalette.h), not a
         // function: `typeof x !== "undefined"` is true for it, so the guard
         // has to check that its Q_INVOKABLE is actually reachable.
-        if (typeof progressiveApplyTheme !== "undefined"
-                && progressiveApplyTheme
-                && typeof progressiveApplyTheme.apply === "function")
-            progressiveApplyTheme.apply(PSettings.darkTheme)
+        if (typeof pcpApplyTheme !== "undefined"
+                && pcpApplyTheme
+                && typeof pcpApplyTheme.apply === "function")
+            pcpApplyTheme.apply(PSettings.darkTheme)
     }
 
     Connections {
@@ -54,7 +54,7 @@ ApplicationWindow {
     Loader {
         id: trayLoader
         active: PSettings.showTray && Qt.platform.os !== "android"
-        source: "qrc:/imports/Progressive/Compat/TrayIcon.qml"
+        source: "qrc:/imports/PCP/Compat/TrayIcon.qml"
         onLoaded: {
             if (item) {
                 item.hideRequested.connect(hideWindow);
@@ -65,7 +65,7 @@ ApplicationWindow {
     }
 
     Controller {
-        id: progressiveController
+        id: pcpController
 
         quitOnLastWindowClosed: !PSettings.showTray
 
@@ -83,7 +83,7 @@ ApplicationWindow {
 
     AccountListModel {
         id: accountListModel
-        controller: progressiveController
+        controller: pcpController
     }
 
     PDialog {
@@ -99,7 +99,7 @@ ApplicationWindow {
     Component {
         id: loginPage
 
-        Login { controller: progressiveController }
+        Login { controller: pcpController }
     }
 
     Room {
@@ -169,7 +169,7 @@ ApplicationWindow {
                                 image: user.avatar
                             }
 
-                            highlightColor: progressiveController.color(user.id)
+                            highlightColor: pcpController.color(user.id)
 
                             page: roomPage
 
@@ -334,7 +334,7 @@ ApplicationWindow {
             }
         }
 
-        onAccepted: progressiveController.createRoom(currentConnection, addRoomDialogNameTextField.text, addRoomDialogTopicTextField.text)
+        onAccepted: pcpController.createRoom(currentConnection, addRoomDialogNameTextField.text, addRoomDialogTopicTextField.text)
     }
 
     PDialog {
@@ -349,7 +349,7 @@ ApplicationWindow {
             connection: currentConnection
 
             onJoinRequested: {
-                progressiveController.joinRoom(currentConnection, roomIdOrAlias)
+                pcpController.joinRoom(currentConnection, roomIdOrAlias)
                 joinRoomDialog.close()
             }
         }
@@ -369,7 +369,7 @@ ApplicationWindow {
             connection: currentConnection
 
             onChatRequested: {
-                progressiveController.createDirectChat(currentConnection, userId)
+                pcpController.createDirectChat(currentConnection, userId)
                 directChatDialog.close()
             }
         }
@@ -415,8 +415,8 @@ ApplicationWindow {
 
     Component.onCompleted: {
         applyAppTheme()
-        progressiveController.initiated.connect(function() {
-            if (progressiveController.accountCount == 0) stackView.push(loginPage)
+        pcpController.initiated.connect(function() {
+            if (pcpController.accountCount == 0) stackView.push(loginPage)
         })
     }
 }

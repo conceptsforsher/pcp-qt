@@ -141,7 +141,7 @@ TypedBase* contentFromFile(const QFileInfo& file, bool asGenericFile)
 #ifdef QT_MULTIMEDIA_LIB
                                     QMediaResource(localUrl).resolution(),
 #else
-                                    // NOTE (Progressive Chat Qt): built without
+                                    // NOTE (PCP Qt): built without
                                     // QtMultimedia — resolution unknown.
                                     QSize(),
 #endif

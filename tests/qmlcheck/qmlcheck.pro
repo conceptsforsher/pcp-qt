@@ -28,7 +28,7 @@
 # from build/ - see the note on -frtti below for why the bare `qmake` on PATH
 # must not be used):
 #   QT_QPA_PLATFORM=offscreen \
-#   QMLCHECK_IMPORT_PATHS=${QT56_ROOT:-$HOME/qt56-toolchain}/qmltest/stubs:${PROGRESSIVE_QT:-$HOME/progressive-android-qt}/imports \
+#   QMLCHECK_IMPORT_PATHS=${QT56_ROOT:-$HOME/qt56-toolchain}/qmltest/stubs:${PCP_QT:-$HOME/pcp-android-qt}/imports \
 #   QMLCHECK_RCC=${QT56_ROOT:-$HOME/qt56-toolchain}/qmltest/test.rcc ./qmlcheck t_*.qml
 #
 # Tests that step through several states need a longer event loop than the
@@ -39,7 +39,7 @@ QT += quick widgets network dbus
 qtHaveModule(multimedia) {
     QT += multimedia
 } else {
-    DEFINES += PROGRESSIVE_NO_MULTIMEDIA
+    DEFINES += PCP_NO_MULTIMEDIA
 }
 
 CONFIG += c++14 console link_pkgconfig
@@ -52,7 +52,7 @@ QMAKE_LFLAGS += -fuse-ld=gold
 
 TARGET = qmlcheck
 
-APP = ../../progressive-android-qt
+APP = ../../pcp-android-qt
 
 # The two vendored libraries, built from source exactly as the app does.
 include($$APP/include/libqmatrixclient/libqmatrixclient.pri)

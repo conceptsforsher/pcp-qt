@@ -1,7 +1,7 @@
 /******************************************************************************
  * Copyright (C) 2019 Kitsune Ral <kitsune-ral@users.sf.net>
  *
- * Backported into Progressive Chat Qt from libQuotient (Jul 2019).
+ * Backported into PCP Qt from libQuotient (Jul 2019).
  * Original LGPL-2.1+ as the rest of the library.
  *
  * This library is free software; you can redistribute it and/or

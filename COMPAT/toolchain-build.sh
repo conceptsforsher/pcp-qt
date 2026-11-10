@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds the real Qt 5.6.3 toolchain used to verify Progressive Chat Qt.
+# Builds the real Qt 5.6.3 toolchain used to verify PCP Qt.
 # See COMPAT/TOOLCHAIN.md. No root needed.
 # Usage: QT56_PREFIX=$HOME/qt56-toolchain/install ./COMPAT/toolchain-build.sh
 set -e

@@ -1,0 +1,3 @@
+module PCP.Setting
+singleton PSettings 0.1 Setting.qml
+

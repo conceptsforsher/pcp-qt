@@ -2,7 +2,7 @@
 #define SINGLEROLE_H
 
 #include "proxyrole.h"
-#include <QObject>  // NOTE (Progressive Chat Qt): direct include required by Qt 5.6 moc
+#include <QObject>  // NOTE (PCP Qt): direct include required by Qt 5.6 moc
 
 namespace qqsfpm {
 

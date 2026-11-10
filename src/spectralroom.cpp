@@ -111,7 +111,7 @@ void SpectralRoom::sendTypingNotification(bool isTyping) {
 
 QString SpectralRoom::lastEvent() {
   if (timelineSize() == 0) return "";
-  // NOTE (Progressive Chat Qt, fork-only): skip edit events (mirrors
+  // NOTE (PCP Qt, fork-only): skip edit events (mirrors
   // upstream handling) so the preview shows real messages.
   auto it = messageEvents().rbegin();
   while (it != messageEvents().rend() && utils::isEditEvent(**it)) ++it;
@@ -176,7 +176,7 @@ QDateTime SpectralRoom::lastActiveTime() {
 }
 
 float SpectralRoom::orderForTag(QString name) {
-  // NOTE (Progressive Chat Qt): TagRecord::order became Omittable<float>
+  // NOTE (PCP Qt): TagRecord::order became Omittable<float>
   // in the Dec 2018 lib; omitted order sorts as 0.
   const auto order = tag(name).order;
   return order.omitted() ? 0.0f : order.value();
@@ -223,7 +223,7 @@ QVariantList SpectralRoom::getUsers(const QString& prefix) {
   return matchedList;
 }
 
-// NOTE (Progressive Chat Qt, fork-only): backported from Jul 2019.
+// NOTE (PCP Qt, fork-only): backported from Jul 2019.
 void SpectralRoom::toggleReaction(const QString& eventId,
                                   const QString& reaction) {
   if (eventId.isEmpty() || reaction.isEmpty())
@@ -262,7 +262,7 @@ void SpectralRoom::toggleReaction(const QString& eventId,
   postEvent(new ReactionEvent(EventRelation::annotate(eventId, reaction)));
 }
 
-// NOTE (Progressive Chat Qt, fork-only): minimal power-level backport.
+// NOTE (PCP Qt, fork-only): minimal power-level backport.
 QJsonObject SpectralRoom::powerLevelsContent() const {
   const auto* plEvt =
       getStateEvent(QStringLiteral("m.room.power_levels"));

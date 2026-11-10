@@ -99,7 +99,7 @@ class Room::Private
         Timeline timeline;
         PendingEvents unsyncedEvents;
         QHash<QString, TimelineItem::index_t> eventsIndex;
-        // NOTE (Progressive Chat Qt): backported from Jul 2019 lib. A map
+        // NOTE (PCP Qt): backported from Jul 2019 lib. A map
         // from evtId to a map of relation type to a vector of event
         // pointers. Not using QMultiHash, because we want to quickly return
         // a number of relations for a given event without enumerating them.
@@ -710,7 +710,7 @@ Room::findPendingEvent(const QString& txnId) const
             [txnId] (const auto& item) { return item->transactionId() == txnId; });
 }
 
-// NOTE (Progressive Chat Qt): backported from Jul 2019 lib.
+// NOTE (PCP Qt): backported from Jul 2019 lib.
 const Room::RelatedEvents Room::relatedEvents(const QString& evtId,
                                               const char* relType) const
 {
@@ -718,7 +718,7 @@ const Room::RelatedEvents Room::relatedEvents(const QString& evtId,
     if (it == historyEdge())
         return {};
 
-    // NOTE (Progressive Chat Qt): call the RoomEvent overload. Passing
+    // NOTE (PCP Qt): call the RoomEvent overload. Passing
     // it->event()->id() would select *this* QString overload again and
     // recurse until the stack overflows (upstream libQuotient had this
     // latent bug; it only bites once a timeline contains relations).
@@ -731,7 +731,7 @@ const Room::RelatedEvents Room::relatedEvents(const RoomEvent& evt,
     return d->relations.value(evt.id()).value(relType);
 }
 
-// NOTE (Progressive Chat Qt, fork-only): minimal power-level backport.
+// NOTE (PCP Qt, fork-only): minimal power-level backport.
 const StateEventBase* Room::getStateEvent(const QString& matrixType,
                                           const QString& stateKey) const
 {
@@ -2142,7 +2142,7 @@ Room::Changes Room::Private::addNewMessageEvents(RoomEvents&& events)
             if (auto* evt = it->viewAs<CallEventBase>())
                 emit q->callEvent(q, evt);
 
-    // NOTE (Progressive Chat Qt): backported from Jul 2019 lib — collect
+    // NOTE (PCP Qt): backported from Jul 2019 lib — collect
     // relations (reactions, edits) for the newly arrived events.
     if (totalInserted > 0)
         for (auto it = from; it != timeline.cend(); ++it) {
@@ -2214,7 +2214,7 @@ void Room::Private::addHistoricalMessageEvents(RoomEvents&& events)
     q->onAddHistoricalTimelineEvents(from);
     emit q->addedMessages(timeline.front().index(), from->index());
 
-    // NOTE (Progressive Chat Qt): backported from Jul 2019 lib — collect
+    // NOTE (PCP Qt): backported from Jul 2019 lib — collect
     // relations for historical events too.
     for (auto it = from; it != timeline.crend(); ++it) {
         if (const auto* reaction = it->viewAs<ReactionEvent>()) {

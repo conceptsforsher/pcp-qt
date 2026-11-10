@@ -7,7 +7,7 @@
 #include "user.h"
 
 #include <QApplication>
-#ifdef PROGRESSIVE_NO_MULTIMEDIA
+#ifdef PCP_NO_MULTIMEDIA
 // Audio playback disabled (QtMultimedia missing at build time).
 #else
 #include <QMediaPlayer>

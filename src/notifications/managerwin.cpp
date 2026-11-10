@@ -34,9 +34,9 @@ uint count = 0;
 void init() {
   isInitialized = true;
 
-  WinToast::instance()->setAppName(L"Progressive Chat");
+  WinToast::instance()->setAppName(L"PCP");
   WinToast::instance()->setAppUserModelId(
-      WinToast::configureAUMI(L"Progressive Chat", L"Progressive Chat"));
+      WinToast::configureAUMI(L"PCP", L"PCP"));
   if (!WinToast::instance()->initialize())
     std::wcout << "Your system in not compatible with toast notifications\n";
 }

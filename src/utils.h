@@ -19,7 +19,7 @@ const QRegExp removeReplyRegex{"> <.*>.*\\n\\n"};
 
 QString removeReply(const QString& text);
 
-// NOTE (Progressive Chat Qt, fork-only): message edits (m.replace).
+// NOTE (PCP Qt, fork-only): message edits (m.replace).
 // True if the event itself is an edit of another event.
 inline bool isEditEvent(const QMatrixClient::RoomEvent& evt) {
   const auto relates = evt.fullJson()

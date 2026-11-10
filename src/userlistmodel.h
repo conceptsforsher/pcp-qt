@@ -21,7 +21,7 @@ class UserListModel : public QAbstractListModel {
     NameRole = Qt::UserRole + 1,
     UserIDRole,
     AvatarRole,
-    // NOTE (Progressive Chat Qt, fork-only): power-level badge role.
+    // NOTE (PCP Qt, fork-only): power-level badge role.
     PermRole
   };
 
@@ -55,7 +55,7 @@ class UserListModel : public QAbstractListModel {
   int findUserPos(const QString& username) const;
 };
 
-// NOTE (Progressive Chat Qt, fork-only): user power-level badge enum,
+// NOTE (PCP Qt, fork-only): user power-level badge enum,
 // exposed to QML as UserType (cf. upstream Jan 2020).
 class UserType : public QObject {
   Q_OBJECT

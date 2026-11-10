@@ -121,7 +121,7 @@ namespace QMatrixClient
         public:
             using Timeline = std::deque<TimelineItem>;
             using PendingEvents = std::vector<PendingEventItem>;
-            // NOTE (Progressive Chat Qt): backported from Jul 2019 lib for
+            // NOTE (PCP Qt): backported from Jul 2019 lib for
             // reactions/edits (m.annotation / m.replace relations).
             using RelatedEvents = QVector<const RoomEvent*>;
             using rev_iter_t = Timeline::const_reverse_iterator;
@@ -262,13 +262,13 @@ namespace QMatrixClient
             PendingEvents::iterator findPendingEvent(const QString & txnId);
             PendingEvents::const_iterator findPendingEvent(const QString & txnId) const;
 
-            // NOTE (Progressive Chat Qt): backported from Jul 2019 lib.
+            // NOTE (PCP Qt): backported from Jul 2019 lib.
             const RelatedEvents relatedEvents(const QString& evtId,
                                               const char* relType) const;
             const RelatedEvents relatedEvents(const RoomEvent& evt,
                                               const char* relType) const;
 
-            // NOTE (Progressive Chat Qt, fork-only): minimal power-level
+            // NOTE (PCP Qt, fork-only): minimal power-level
             // backport. Returns the current state event for (type, stateKey)
             // or nullptr if there is none (e.g. no m.room.power_levels yet).
             const StateEventBase* getStateEvent(
@@ -584,7 +584,7 @@ namespace QMatrixClient
             void tagsAboutToChange();
             void tagsChanged();
 
-            // NOTE (Progressive Chat Qt): backported from Jul 2019 lib;
+            // NOTE (PCP Qt): backported from Jul 2019 lib;
             // emitted when new relations (reactions, edits) arrive for it.
             void updatedEvent(QString eventId);
 

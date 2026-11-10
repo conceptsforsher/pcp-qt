@@ -7,7 +7,7 @@
 #ifndef USERDIRECTORYLISTMODEL_H
 #define USERDIRECTORYLISTMODEL_H
 
-#include <QObject>  // NOTE (Progressive Chat Qt): direct include required by Qt 5.6 moc
+#include <QObject>  // NOTE (PCP Qt): direct include required by Qt 5.6 moc
 #include <QtCore/QAbstractListModel>
 
 #include "connection.h"
