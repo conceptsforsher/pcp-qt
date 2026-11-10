@@ -43,9 +43,9 @@ QHash<int, QByteArray> MessageEventModel::roleNames() const {
   roles[AnnotationRole] = "annotation";
   roles[EventResolvedTypeRole] = "eventResolvedType";
   roles[UserMarkerRole] = "userMarker";
-  // NOTE (Progressive Chat Qt, fork-only): backported reactions support.
+  // NOTE (PCP Qt, fork-only): backported reactions support.
   roles[ReactionRole] = "reaction";
-  // NOTE (Progressive Chat Qt, fork-only): reply preview (Jul 2019).
+  // NOTE (PCP Qt, fork-only): reply preview (Jul 2019).
   roles[ReplyRole] = "reply";
   return roles;
 }
@@ -56,7 +56,7 @@ MessageEventModel::MessageEventModel(QObject* parent)
   qmlRegisterType<FileTransferInfo>();
   qRegisterMetaType<FileTransferInfo>();
   qmlRegisterUncreatableType<EventStatus>(
-      "Progressive", 0, 1, "EventStatus", "EventStatus is not an creatable type");
+      "PCP", 0, 1, "EventStatus", "EventStatus is not an creatable type");
 }
 
 MessageEventModel::~MessageEventModel() {}
@@ -138,7 +138,7 @@ void MessageEventModel::setRoom(SpectralRoom* room) {
     connect(
         m_currentRoom, &Room::replacedEvent, this,
         [this](const RoomEvent* newEvent) { refreshEvent(newEvent->id()); });
-    // NOTE (Progressive Chat Qt, fork-only): refresh reactions on updates.
+    // NOTE (PCP Qt, fork-only): refresh reactions on updates.
     // DisplayRole too, so edited text appears.
     connect(m_currentRoom, &Room::updatedEvent, this, [this](const QString& eventId) {
       refreshEventRoles(eventId, {ReactionRole, Qt::DisplayRole});
@@ -371,7 +371,7 @@ QVariant MessageEventModel::data(const QModelIndex& idx, int role) const {
   }
 
   if (role == ReplyRole) {
-    // NOTE (Progressive Chat Qt, fork-only): reply preview ported from
+    // NOTE (PCP Qt, fork-only): reply preview ported from
     // Jul 2019. Plain-text display (no cleanHTML helper on this stack).
     if (isPending) return {};
     const QString replyEventId = evt.contentJson()[QStringLiteral("m.relates_to")]
@@ -393,7 +393,7 @@ QVariant MessageEventModel::data(const QModelIndex& idx, int role) const {
   }
 
   if (role == ReactionRole) {
-    // NOTE (Progressive Chat Qt, fork-only): backported from Jul 2019.
+    // NOTE (PCP Qt, fork-only): backported from Jul 2019.
     if (isPending) return {};
     const auto& annotations =
         m_currentRoom->relatedEvents(evt, EventRelation::Annotation());

@@ -9,12 +9,12 @@ build-flatpak:
     - git submodule update --init --recursive
   script:
     - cd flatpak
-    - flatpak-builder --force-clean --repo=repo build-dir chat.progressive.qt.yaml
-    - flatpak build-bundle repo progressive-chat.flatpak chat.progressive.qt
+    - flatpak-builder --force-clean --repo=repo build-dir chat.pcp.qt.yaml
+    - flatpak build-bundle repo pcp-chat.flatpak chat.pcp.qt
     - cd ../
   artifacts:
     paths:
-    - flatpak/progressive-chat.flatpak
+    - flatpak/pcp-chat.flatpak
 
 build-appimage:
   image: black0/qt
@@ -26,7 +26,7 @@ build-appimage:
     - /opt/qt56/bin/qmake CONFIG+=debug CONFIG+=qml_debug PREFIX=/usr
     - make
     - make INSTALL_ROOT=appdir install
-    - /usr/bin/linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/chat.progressive.qt.desktop -appimage -qmldir=qml -qmldir=imports -qmake=/opt/qt56/bin/qmake
+    - /usr/bin/linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/chat.pcp.qt.desktop -appimage -qmldir=qml -qmldir=imports -qmake=/opt/qt56/bin/qmake
   artifacts:
     paths:
-    - Progressive-Chat-x86_64.AppImage
+    - PCP-Chat-x86_64.AppImage

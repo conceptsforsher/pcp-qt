@@ -11,7 +11,7 @@ documents how to reproduce it. No root needed.
   - `qt-everywhere-opensource-src-5.6.3/` — extracted sources + 2 small patches (below)
   - `build-qt56.sh` — configure+build+install script used
   - `install/` — the toolchain (`install/bin/qmake` reports `5.6.3`)
-  - `app-build/` — Progressive Chat Qt built with that qmake
+  - `app-build/` — PCP Qt built with that qmake
   - `qmltest/` — headless QML harness + farm tests (persistent re-creation
     of the /tmp scratch tests)
   - `build.log`, `install.log`, `app-build.log` — full logs
@@ -37,9 +37,9 @@ tar -xf qt-5.6.3.tar.xz
 make -j$(nproc)
 make install
 # 3. build the app
-$PREFIX/bin/qmake progressive-qt.pro && make -j$(nproc)
+$PREFIX/bin/qmake pcp-qt.pro && make -j$(nproc)
 # 4. run headless (needs a platform plugin; offscreen/minimal ship by default)
-QT_QPA_PLATFORM=offscreen ./progressive-chat
+QT_QPA_PLATFORM=offscreen ./pcp-chat
 ```
 
 Notes:
@@ -54,7 +54,7 @@ Notes:
 - If you re-run `configure` in an existing tree, delete stale PCH first:
   `find . -type d -name .pch -exec rm -rf {} +`.
 - QtMultimedia is skipped on purpose: the app compiles without it
-  (`PROGRESSIVE_NO_MULTIMEDIA`, audio playback becomes a warning).
+  (`PCP_NO_MULTIMEDIA`, audio playback becomes a warning).
   Same for OpenSSL (`-no-openssl`; `QT_NO_SSL` guards in the vendored lib).
 - `make install` provides real QtQuick.Controls 1.4 / Styles /
   QtGraphicalEffects / `Qt.labs.settings` 1.0 — no `Qt.labs.platform`
@@ -78,7 +78,7 @@ mkdir -p build && cd build
 
 cd ..
 export QT_QPA_PLATFORM=offscreen \
-       QMLCHECK_IMPORT_PATHS=$PWD/stubs:/home/user/progressive-android-qt/imports \
+       QMLCHECK_IMPORT_PATHS=$PWD/stubs:/home/user/pcp-android-qt/imports \
        QMLCHECK_RCC=$PWD/test.rcc
 for f in t_*.qml; do ./build/qmlcheck $f; done     # prints RESULT:PASS per file
 ```
@@ -101,13 +101,13 @@ Notes:
   ```
   cd build && \
   QT_QPA_PLATFORM=offscreen \
-  QMLCHECK_IMPORT_PATHS=/home/user/qt56-toolchain/qmltest/stubs:/home/user/progressive-android-qt/imports \
+  QMLCHECK_IMPORT_PATHS=/home/user/qt56-toolchain/qmltest/stubs:/home/user/pcp-android-qt/imports \
   QMLCHECK_RCC=/home/user/qt56-toolchain/qmltest/test.rcc \
   ./qmlcheck t_delegates.qml
   ```
-  A relative `stubs:../../progressive-android-qt/imports` (as the comment in
+  A relative `stubs:../../pcp-android-qt/imports` (as the comment in
   `qmlcheck.pro` suggests) silently loads nothing — every test then reports
-  `module "Progressive.Setting" is not installed` and `RESULT:FAIL`.
+  `module "PCP.Setting" is not installed` and `RESULT:FAIL`.
 - Sources are referenced **relatively** on purpose. Both vendored `.pri` files
   set `object_parallel_to_source`, and for absolute paths qmake writes the
   `.o` files *next to the sources* — into the app's source tree, where the
@@ -166,7 +166,7 @@ Notes:
 
 ## Verification results (this toolchain)
 
-- `qmake progressive-qt.pro && make` — clean, `progressive-chat` links.
+- `qmake pcp-qt.pro && make` — clean, `pcp-chat` links.
 - App startup headless: all QML loads (login/room/setting pages, dialogs,
   menus, drawer), models init, `Model timeline reset` reached. First paint
   needs GL (absent on headless CI) — identical for any QtQuick app.
@@ -194,7 +194,7 @@ platforms android-10/14/16 + build-tools 24.0.3. Key ingredients:
   with system Qt (`g++ main.cpp -lQt5Core`).
 - A local APK build on aarch64 dev boxes is not supported (NDK r10e host
   tools are x86_64-only, no qemu).
-- Result: 9.6 MB debug APK with `lib/armeabi-v7a/libprogressive-chat.so`
+- Result: 9.6 MB debug APK with `lib/armeabi-v7a/libpcp-chat.so`
   plus Qt 5.6 Core/Gui/Network/Qml/Quick/Widgets.
 - `android/AndroidManifest.xml` declares minSdk 9 / targetSdk 14.
 

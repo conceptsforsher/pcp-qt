@@ -1,5 +1,5 @@
 name: Android APK (Qt 5.6)
-# Builds Progressive Chat Qt for Android with the era toolchain:
+# Builds PCP Qt for Android with the era toolchain:
 # Qt 5.6.3 + NDK r10e + SDK android-14, ant + JDK 8.
 # A local APK build is intentionally NOT supported on aarch64 dev boxes
 # (NDK r10e host tools are x86_64-only); CI is the real Android toolchain.
@@ -110,22 +110,22 @@ jobs:
           export JAVA_HOME="$JAVA_HOME_8_X64"
           export PATH="$QT56_PREFIX/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
           mkdir -p app-build && cd app-build
-          "$QT56_PREFIX/bin/qmake" "$GITHUB_WORKSPACE/progressive-qt.pro"
+          "$QT56_PREFIX/bin/qmake" "$GITHUB_WORKSPACE/pcp-qt.pro"
           make -j"$(nproc)"
           make install INSTALL_ROOT=android-build
           echo "=== deployment-settings.json ==="
-          cat android-libprogressive-chat.so-deployment-settings.json
+          cat android-libpcp-chat.so-deployment-settings.json
           echo "=== manual qmlimportscanner run (expect our QtQuick.* modules resolved) ==="
           "$QT56_PREFIX/bin/qmlimportscanner" -rootPath "$GITHUB_WORKSPACE/" \
             -importPath "$QT56_PREFIX/qml" "$GITHUB_WORKSPACE/" \
             | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d), 'entries'); print([e.get('name') for e in d if e.get('path','').startswith('$QT56_PREFIX')][:12])"
           "$GITHUB_WORKSPACE/androiddeployqt" --verbose \
-            --input android-libprogressive-chat.so-deployment-settings.json \
+            --input android-libpcp-chat.so-deployment-settings.json \
             --output android-build --deployment bundled --ant /usr/bin/ant
           find android-build -name "*.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: progressive-chat-qt-apk
+          name: pcp-chat-qt-apk
           path: app-build/android-build/bin/*.apk

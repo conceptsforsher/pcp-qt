@@ -58,7 +58,7 @@ uint NotificationsManager::showNotification(const QString summary,
   QVariantMap hints;
   hints["image-data"] = croppedImage;
   QList<QVariant> argumentList;
-  argumentList << "Progressive Chat";                           // app_name
+  argumentList << "PCP";                           // app_name
   argumentList << uint(0);                              // replace_id
   argumentList << "";                                   // app_icon
   argumentList << summary;                              // summary
@@ -138,7 +138,7 @@ QDBusArgument &operator<<(QDBusArgument &arg, const QImage &image) {
   int channels = i.isGrayscale() ? 1 : (i.hasAlphaChannel() ? 4 : 3);
   arg << i.depth() / channels;
   arg << channels;
-  // NOTE (Progressive Chat Qt): QImage::sizeInBytes() needs Qt >= 5.10;
+  // NOTE (PCP Qt): QImage::sizeInBytes() needs Qt >= 5.10;
   // byteCount() works on the Qt 5.6 target too.
 #if (QT_VERSION < QT_VERSION_CHECK(5, 10, 0))
   arg << QByteArray(reinterpret_cast<const char *>(i.bits()), i.byteCount());

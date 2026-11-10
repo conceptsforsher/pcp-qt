@@ -8,7 +8,7 @@
 #ifndef PUBLICROOMLISTMODEL_H
 #define PUBLICROOMLISTMODEL_H
 
-#include <QObject>  // NOTE (Progressive Chat Qt): direct include required by Qt 5.6 moc
+#include <QObject>  // NOTE (PCP Qt): direct include required by Qt 5.6 moc
 #include <QtCore/QAbstractListModel>
 
 #include "connection.h"
@@ -31,7 +31,7 @@ class PublicRoomListModel : public QAbstractListModel {
     NameRole = Qt::DisplayRole + 1,
     AvatarRole,
     TopicRole,
-    // NOTE (Progressive Chat Qt, fork-only): join target for the room.
+    // NOTE (PCP Qt, fork-only): join target for the room.
     RoomIDRole
   };
 

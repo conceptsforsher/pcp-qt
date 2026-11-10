@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!-- Progressive Chat Qt manifest, based on the Qt 5.6 androiddeployqt
+<!-- PCP Qt manifest, based on the Qt 5.6 androiddeployqt
      template. Tokens like %%USE_LOCAL_QT_LIBS%% are filled in by
      androiddeployqt at packaging time. They must stay: without the
      use_local_qt_libs entry the app falls back to Ministro. -->
-<manifest package="chat.progressive.qt" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.0.1" android:versionCode="1" android:installLocation="auto">
-    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="Progressive Chat" android:icon="@drawable/icon">
+<manifest package="chat.pcp.qt" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.0.1" android:versionCode="1" android:installLocation="auto">
+    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="PCP" android:icon="@drawable/icon">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation"
                   android:name="org.qtproject.qt5.android.bindings.QtActivity"
-                  android:label="Progressive Chat"
+                  android:label="PCP"
                   android:icon="@drawable/icon"
                   android:screenOrientation="unspecified"
                   android:launchMode="singleTop">

@@ -10,13 +10,13 @@ install:
 - git submodule update --init --recursive
 
 script:
-- qmake progressive-qt.pro CONFIG+=debug CONFIG+=qml_debug PREFIX="${DEPLOY_DIR}"
+- qmake pcp-qt.pro CONFIG+=debug CONFIG+=qml_debug PREFIX="${DEPLOY_DIR}"
 - make
 - make install
-- macdeployqt ${DEPLOY_DIR}/bin/progressive-chat.app -dmg -qmldir=qml -qmldir=imports
+- macdeployqt ${DEPLOY_DIR}/bin/pcp-chat.app -dmg -qmldir=qml -qmldir=imports
 
 before_deploy:
-- mv ${DEPLOY_DIR}/bin/progressive-chat.dmg ./
+- mv ${DEPLOY_DIR}/bin/pcp-chat.dmg ./
 - sed -i -e "s/TRAVIS_BUILD_NUMBER/${TRAVIS_BUILD_NUMBER}/g" .ci/bintray-release.json
 
 deploy:

@@ -1,0 +1,2 @@
+module PCP.Style
+singleton PPalette 0.1 Palette.qml

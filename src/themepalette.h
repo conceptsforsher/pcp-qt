@@ -1,5 +1,5 @@
 // GPL-3.0-only
-// Copyright (C) 2026 https://progressive.chat contributors
+// Copyright (C) 2026 https://pcp.chat contributors
 // Based on Spectral (GPL-3.0). See README.md.
 //
 // FORK-ONLY: applies the application palette for the app's own light/dark
@@ -35,7 +35,7 @@ class ThemePalette : public QObject {
 
   Q_INVOKABLE void apply(bool dark)
   {
-    // Same colours as Progressive.Style's PPalette, so the fallback palette
+    // Same colours as PCP.Style's PPalette, so the fallback palette
     // and the QML palette agree.
     const QColor window = dark ? QColor("#303030") : QColor("#fafafa");
     const QColor text = dark ? QColor("#f5f5f5") : QColor("#212121");

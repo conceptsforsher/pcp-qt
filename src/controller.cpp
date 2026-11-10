@@ -77,7 +77,7 @@ void Controller::loginWithCredentials(QString serverAddr, QString user,
       account.clearAccessToken();  // Drop the legacy - just in case
       account.setHomeserver(m_connection->homeserver());
       account.setDeviceId(m_connection->deviceId());
-      account.setDeviceName("Progressive Chat");
+      account.setDeviceName("PCP");
       if (!saveAccessToken(account, m_connection->accessToken()))
         qWarning() << "Couldn't save access token";
       account.sync();
@@ -110,7 +110,7 @@ void Controller::loginWithCredentials(QString serverAddr, QString user,
     ) {
       emit errorOccured(
           "This build has no HTTPS support",
-          "Progressive Chat was built against a Qt without OpenSSL, so it "
+          "PCP was built against a Qt without OpenSSL, so it "
           "cannot connect to Matrix homeservers over https:// (got: "
           "\"Protocol \\\"https\\\" is unknown\"). Rebuild Qt with OpenSSL "
           "support, or use a plain http:// homeserver for testing.");
@@ -229,7 +229,7 @@ bool Controller::saveAccessToken(const AccountSettings& account,
 }
 
 void Controller::joinRoom(Connection* c, const QString& alias) {
-  // NOTE (Progressive Chat Qt, fork-only): upstream never guarded against a
+  // NOTE (PCP Qt, fork-only): upstream never guarded against a
   // null connection (e.g. tapping + with no account). Refuse cleanly instead
   // of crashing.
   if (!c) {
@@ -282,7 +282,7 @@ QString Controller::accessTokenOf(Connection* conn) {
 }
 
 void Controller::playAudio(QUrl localFile) {
-#ifdef PROGRESSIVE_NO_MULTIMEDIA
+#ifdef PCP_NO_MULTIMEDIA
   Q_UNUSED(localFile);
   qWarning() << "Audio playback is disabled (built without QtMultimedia)";
 #else

@@ -47,14 +47,14 @@ fi
 # -------------------------------------------------------------- Qt patch
 cd "$QT_SRC_DIR"
 SSL_PRI=qtbase/src/network/ssl/ssl.pri
-if ! grep -q "Progressive Chat Qt: Qt 5.6 supports only OpenSSL 1.0.x" "$SSL_PRI"; then
+if ! grep -q "PCP Qt: Qt 5.6 supports only OpenSSL 1.0.x" "$SSL_PRI"; then
   python3 - "$SSL_PRI" "$SSL_PREFIX" <<'PY'
 import sys
 path, prefix = sys.argv[1], sys.argv[2]
 s = open(path).read()
 anchor = "    android:!android-no-sdk: SOURCES += ssl/qsslsocket_openssl_android.cpp\n"
 block = anchor + """
-    # Progressive Chat Qt: Qt 5.6 supports only OpenSSL 1.0.x - in 1.1.x
+    # PCP Qt: Qt 5.6 supports only OpenSSL 1.0.x - in 1.1.x
     # struct x509_st became opaque and qsslcertificate_openssl.cpp (which
     # dereferences it) fails to compile. Point at our own OpenSSL 1.0.2u
     # build: configure only uses -I for its own feature tests, so the path
@@ -94,12 +94,12 @@ make install
 # Embed the static Qt's QML modules, then build the single-file binary.
 APP_BUILD=/home/user/qt56-static/app-build
 mkdir -p "$APP_BUILD"
-/home/user/progressive-android-qt/COMPAT/gen-static-qml-qrc.sh "$QT_PREFIX" "$APP_BUILD"
+/home/user/pcp-android-qt/COMPAT/gen-static-qml-qrc.sh "$QT_PREFIX" "$APP_BUILD"
 cd "$APP_BUILD"
-"$QT_PREFIX/bin/qmake" /home/user/progressive-android-qt/progressive-qt.pro
+"$QT_PREFIX/bin/qmake" /home/user/pcp-android-qt/pcp-qt.pro
 make -j"$(nproc)"
 
 # Sanity check: the binary must contain OpenSSL and no dynamic Qt deps.
-nm progressive-chat | grep -c SSL_
-ldd progressive-chat | grep -c libQt   # expect 0
-echo "OK: single-file HTTPS-capable binary at $APP_BUILD/progressive-chat"
+nm pcp-chat | grep -c SSL_
+ldd pcp-chat | grep -c libQt   # expect 0
+echo "OK: single-file HTTPS-capable binary at $APP_BUILD/pcp-chat"

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=PCP
+GenericName=Matrix Client
+Comment=PCP Matrix client for old devices (Qt 5.6, Android 2.3+)
+Exec=pcp-chat
+Terminal=false
+Icon=chat.pcp.qt
+Type=Application
+Categories=Network;InstantMessaging;
