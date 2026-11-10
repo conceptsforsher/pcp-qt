@@ -5,7 +5,7 @@
 #include "room.h"
 
 #include <QtCore/QAbstractListModel>
-#include <QObject>  // NOTE (Progressive Chat Qt): direct include required by Qt 5.6 moc
+#include <QObject>  // NOTE (PCP Qt): direct include required by Qt 5.6 moc
 
 class MessageEventModel : public QAbstractListModel {
   Q_OBJECT
@@ -33,9 +33,9 @@ class MessageEventModel : public QAbstractListModel {
     UserMarkerRole,
     // For debugging
     EventResolvedTypeRole,
-    // NOTE (Progressive Chat Qt, fork-only): backported reactions support.
+    // NOTE (PCP Qt, fork-only): backported reactions support.
     ReactionRole,
-    // NOTE (Progressive Chat Qt, fork-only): reply preview (Jul 2019).
+    // NOTE (PCP Qt, fork-only): reply preview (Jul 2019).
     ReplyRole,
   };
 

@@ -5,7 +5,7 @@
 #include <QQmlListProperty>
 #include <qqml.h>
 #include <QPointer>
-#include <QObject>  // NOTE (Progressive Chat Qt): direct include required by Qt 5.6 moc
+#include <QObject>  // NOTE (PCP Qt): direct include required by Qt 5.6 moc
 
 namespace qqsfpm {
 

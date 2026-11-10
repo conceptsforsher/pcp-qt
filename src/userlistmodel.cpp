@@ -13,9 +13,9 @@
 
 UserListModel::UserListModel(QObject* parent)
     : QAbstractListModel(parent), m_currentRoom(nullptr) {
-  // NOTE (Progressive Chat Qt, fork-only): cf. EventStatus registration.
+  // NOTE (PCP Qt, fork-only): cf. EventStatus registration.
   qmlRegisterUncreatableType<UserType>(
-      "Progressive", 0, 1, "UserType", "UserType is not a creatable type");
+      "PCP", 0, 1, "UserType", "UserType is not a creatable type");
 }
 
 void UserListModel::setRoom(QMatrixClient::Room* room) {
@@ -83,7 +83,7 @@ QVariant UserListModel::data(const QModelIndex& index, int role) const {
     return QImage();
   }
   if (role == PermRole) {
-    // NOTE (Progressive Chat Qt, fork-only): mirrors upstream Jan 2020
+    // NOTE (PCP Qt, fork-only): mirrors upstream Jan 2020
     // classification over the powerlevels.h JSON helpers.
     const auto* plEvt = m_currentRoom->getStateEvent(
         QStringLiteral("m.room.power_levels"));

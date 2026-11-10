@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// Copyright (C) 2026 https://progressive.chat contributors
+// Copyright (C) 2026 https://pcp.chat contributors
 // Based on Spectral (GPL-3.0). See README.md.
 #include <QGuiApplication>
 #include <QNetworkProxy>
@@ -25,7 +25,7 @@
 #include "publicroomlistmodel.h"
 #include "userdirectorylistmodel.h"
 
-#ifdef PROGRESSIVE_STATIC_QT
+#ifdef PCP_STATIC_QT
 // Static Qt build: import the QML/platform plugins explicitly (no dlopen).
 #include <QtPlugin>
 Q_IMPORT_PLUGIN(QMinimalIntegrationPlugin)
@@ -59,32 +59,32 @@ namespace {
 // root on Android 5+), falls back to app's cache dir. Readable with any
 // file manager, no adb needed. Captures Qt/QML warnings plus explicit
 // stage markers so a silent native crash still leaves a trace.
-QString progressiveLogPath() {
+QString pcpLogPath() {
   // Try external files dir first (accessible without root on Android 5+)
   QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
   if (path.isEmpty()) {
     path = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
   }
-  path += QStringLiteral("/progressive-chat.log");
+  path += QStringLiteral("/pcp-chat.log");
   return path;
 }
-void progressiveLogRaw(const QString& line) {
-  QFile f(progressiveLogPath());
+void pcpLogRaw(const QString& line) {
+  QFile f(pcpLogPath());
   if (f.open(QIODevice::Append | QIODevice::Text)) {
     QTextStream out(&f);
     out << QDateTime::currentDateTime().toString(Qt::ISODate) << " " << line
         << "\n";
   }
 }
-void progressiveMessageHandler(QtMsgType, const QMessageLogContext&,
+void pcpMessageHandler(QtMsgType, const QMessageLogContext&,
                                const QString& msg) {
-  progressiveLogRaw(msg);
+  pcpLogRaw(msg);
   fprintf(stderr, "%s\n", msg.toLocal8Bit().constData());
 }
 }  // namespace
-#define PROGRESSIVE_STAGE(m) progressiveLogRaw(QStringLiteral("stage: ") + QStringLiteral(m))
+#define PCP_STAGE(m) pcpLogRaw(QStringLiteral("stage: ") + QStringLiteral(m))
 #else
-#define PROGRESSIVE_STAGE(m) ((void)0)
+#define PCP_STAGE(m) ((void)0)
 #endif
 
 // FORK-ONLY: print a native backtrace on fatal signals.
@@ -102,16 +102,16 @@ void progressiveMessageHandler(QtMsgType, const QMessageLogContext&,
 // desktop-only. The release APK still reports crashes via logcat.
 #if !defined(Q_OS_ANDROID) && defined(__linux__)
 #include <execinfo.h>
-#define PROGRESSIVE_HAVE_BACKTRACE 1
+#define PCP_HAVE_BACKTRACE 1
 #endif
 
-extern "C" void progressiveFatalSignalHandler(int sig)
+extern "C" void pcpFatalSignalHandler(int sig)
 {
-#ifdef PROGRESSIVE_HAVE_BACKTRACE
+#ifdef PCP_HAVE_BACKTRACE
   void* frames[64];
   const int n = ::backtrace(frames, 64);
   // Marker so it is greppable in the crash output.
-  static const char msg[] = "\n=== progressive-chat: fatal signal, backtrace follows ===\n";
+  static const char msg[] = "\n=== pcp-chat: fatal signal, backtrace follows ===\n";
   const ssize_t ignored = ::write(STDERR_FILENO, msg, sizeof(msg) - 1);
   Q_UNUSED(ignored);
   ::backtrace_symbols_fd(frames, n, STDERR_FILENO);
@@ -130,9 +130,9 @@ extern "C" void progressiveFatalSignalHandler(int sig)
   ::raise(sig);
 }
 
-static void progressiveInstallCrashHandler()
+static void pcpInstallCrashHandler()
 {
-#ifdef PROGRESSIVE_HAVE_BACKTRACE
+#ifdef PCP_HAVE_BACKTRACE
   // A stack-overflow SIGSEGV cannot be reported from the handler itself:
   // the guard page is already hit, so the handler has no stack to run on
   // and the process dies silently. Give the handler its own stack via
@@ -146,7 +146,7 @@ static void progressiveInstallCrashHandler()
   ss.ss_flags = 0;
   if (sigaltstack(&ss, nullptr) != 0) {
     static const char msg[] =
-        "\n=== progressive-chat: sigaltstack() failed; stack-overflow "
+        "\n=== pcp-chat: sigaltstack() failed; stack-overflow "
         "crashes will not be reportable ===\n";
     const ssize_t ignored = ::write(STDERR_FILENO, msg, sizeof(msg) - 1);
     Q_UNUSED(ignored);
@@ -156,7 +156,7 @@ static void progressiveInstallCrashHandler()
   // NOTE: do NOT name this "signals" - Qt defines that as a macro.
   const int fatalSignals[] = {SIGSEGV, SIGABRT, SIGBUS, SIGILL, SIGFPE};
   struct sigaction sa;
-  sa.sa_handler = progressiveFatalSignalHandler;
+  sa.sa_handler = pcpFatalSignalHandler;
   sigemptyset(&sa.sa_mask);
   // No SA_RESETHARD: we reset it ourselves before re-raising.
   sa.sa_flags = SA_ONSTACK;
@@ -166,8 +166,8 @@ static void progressiveInstallCrashHandler()
 // FORK-ONLY: Ctrl+Shift+S saves a PNG of the main window and prints the
 // path. Minimal/embedded systems often have no screenshot tool installed,
 // and bug reports are far more useful with a picture. Also honours
-// PROGRESSIVE_SCREENSHOT=/path/file.png to capture once after startup.
-static QString progressiveSaveScreenshot(QQuickWindow* window)
+// PCP_SCREENSHOT=/path/file.png to capture once after startup.
+static QString pcpSaveScreenshot(QQuickWindow* window)
 {
   if (!window) return {};
   const QImage shot = window->grabWindow();
@@ -183,15 +183,15 @@ static QString progressiveSaveScreenshot(QQuickWindow* window)
   // user's home or a read-only location, and /tmp is where a screenshot
   // is easiest to find from a terminal.
   QDir dir(QStringLiteral("."));
-  if (qEnvironmentVariableIsSet("PROGRESSIVE_SCREENSHOT_DIR")) {
-    dir = QDir(QString::fromLocal8Bit(qgetenv("PROGRESSIVE_SCREENSHOT_DIR")));
+  if (qEnvironmentVariableIsSet("PCP_SCREENSHOT_DIR")) {
+    dir = QDir(QString::fromLocal8Bit(qgetenv("PCP_SCREENSHOT_DIR")));
   } else {
     dir = QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation));
   }
   if (!dir.exists())
     dir.mkpath(QStringLiteral("."));
   const QString path =
-      dir.filePath(QStringLiteral("progressive-chat-%1.png").arg(stamp));
+      dir.filePath(QStringLiteral("pcp-chat-%1.png").arg(stamp));
   if (!shot.save(path, "PNG")) {
     qWarning() << "Screenshot failed: cannot write" << path;
     return {};
@@ -202,10 +202,10 @@ static QString progressiveSaveScreenshot(QQuickWindow* window)
 
 // Ctrl+Shift+S key filter. A QShortcut would need a QWidget parent, and a
 // QQuickWindow is not one, so match the key press ourselves.
-class ProgressiveScreenshotKeyFilter : public QObject
+class PcpScreenshotKeyFilter : public QObject
 {
   public:
-    explicit ProgressiveScreenshotKeyFilter(QQuickWindow* window)
+    explicit PcpScreenshotKeyFilter(QQuickWindow* window)
         : m_window(window)
     {
         window->installEventFilter(this);
@@ -219,7 +219,7 @@ class ProgressiveScreenshotKeyFilter : public QObject
             const bool ctrl = key->modifiers().testFlag(Qt::ControlModifier);
             const bool shift = key->modifiers().testFlag(Qt::ShiftModifier);
             if (ctrl && shift && key->key() == Qt::Key_S) {
-                progressiveSaveScreenshot(m_window);
+                pcpSaveScreenshot(m_window);
                 return true;
             }
         }
@@ -230,51 +230,51 @@ class ProgressiveScreenshotKeyFilter : public QObject
     QQuickWindow* m_window;
 };
 
-static void progressiveInstallScreenshotShortcut(QQuickWindow* window)
+static void pcpInstallScreenshotShortcut(QQuickWindow* window)
 {
   if (!window) return;
-  new ProgressiveScreenshotKeyFilter(window);
+  new PcpScreenshotKeyFilter(window);
 }
 
 int main(int argc, char *argv[]) {
-  progressiveInstallCrashHandler();
+  pcpInstallCrashHandler();
 #if defined(Q_OS_WIN)
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
 #ifdef Q_OS_ANDROID
   // Earliest possible stage marker - before QApplication
-  PROGRESSIVE_STAGE("pre-QApplication");
+  PCP_STAGE("pre-QApplication");
 #endif
 
   QApplication app(argc, argv);
 
 #ifdef Q_OS_ANDROID
-  qInstallMessageHandler(progressiveMessageHandler);
+  qInstallMessageHandler(pcpMessageHandler);
 #endif
-  PROGRESSIVE_STAGE("app created");
+  PCP_STAGE("app created");
 
-  app.setOrganizationName("Progressive Chat");
-  app.setOrganizationDomain("progressive.chat");
-  app.setApplicationName("Progressive Chat");
+  app.setOrganizationName("PCP");
+  app.setOrganizationDomain("pcp.chat");
+  app.setApplicationName("PCP");
   app.setWindowIcon(QIcon(":/assets/img/icon.png"));
 
   qmlRegisterType<qqsfpm::QQmlSortFilterProxyModel>("SortFilterProxyModel", 0,
                                                     2, "SortFilterProxyModel");
-  qmlRegisterType<ImageItem>("Progressive", 0, 1, "ImageItem");
-  qmlRegisterType<Controller>("Progressive", 0, 1, "Controller");
-  qmlRegisterType<AccountListModel>("Progressive", 0, 1, "AccountListModel");
-  qmlRegisterType<RoomListModel>("Progressive", 0, 1, "RoomListModel");
-  qmlRegisterType<UserListModel>("Progressive", 0, 1, "UserListModel");
-  qmlRegisterType<PublicRoomListModel>("Progressive", 0, 1,
+  qmlRegisterType<ImageItem>("PCP", 0, 1, "ImageItem");
+  qmlRegisterType<Controller>("PCP", 0, 1, "Controller");
+  qmlRegisterType<AccountListModel>("PCP", 0, 1, "AccountListModel");
+  qmlRegisterType<RoomListModel>("PCP", 0, 1, "RoomListModel");
+  qmlRegisterType<UserListModel>("PCP", 0, 1, "UserListModel");
+  qmlRegisterType<PublicRoomListModel>("PCP", 0, 1,
                                        "PublicRoomListModel");
-  qmlRegisterType<UserDirectoryListModel>("Progressive", 0, 1,
+  qmlRegisterType<UserDirectoryListModel>("PCP", 0, 1,
                                           "UserDirectoryListModel");
-  qmlRegisterType<MessageEventModel>("Progressive", 0, 1, "MessageEventModel");
-  qmlRegisterType<EmojiModel>("Progressive", 0, 1, "EmojiModel");
-  qmlRegisterUncreatableType<RoomMessageEvent>("Progressive", 0, 1,
+  qmlRegisterType<MessageEventModel>("PCP", 0, 1, "MessageEventModel");
+  qmlRegisterType<EmojiModel>("PCP", 0, 1, "EmojiModel");
+  qmlRegisterUncreatableType<RoomMessageEvent>("PCP", 0, 1,
                                                "RoomMessageEvent", "ENUM");
-  qmlRegisterUncreatableType<RoomType>("Progressive", 0, 1, "RoomType", "ENUM");
+  qmlRegisterUncreatableType<RoomType>("PCP", 0, 1, "RoomType", "ENUM");
 
   qRegisterMetaType<User *>("User*");
   qRegisterMetaType<Room *>("Room*");
@@ -285,9 +285,9 @@ int main(int argc, char *argv[]) {
   QQmlApplicationEngine engine;
 
   engine.addImportPath("qrc:/imports");
-#ifdef PROGRESSIVE_STATIC_QT
+#ifdef PCP_STATIC_QT
   // Static Qt build: QML modules are embedded in resources (see static-qml
-  // handling in progressive-qt.pro).
+  // handling in pcp-qt.pro).
   engine.addImportPath("qrc:/qt56qml");
 #endif
   ImageProvider *m_provider = new ImageProvider();
@@ -296,12 +296,12 @@ int main(int argc, char *argv[]) {
   // so expose the cache location from C++ instead. See DownloadableContent.qml.
   engine.rootContext()->setContextProperty(
       "cacheLocation", QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
-  // FORK-ONLY: PROGRESSIVE_DEBUG_DELEGATE=1 makes the timeline delegate log
+  // FORK-ONLY: PCP_DEBUG_DELEGATE=1 makes the timeline delegate log
   // the roles it actually received. This is the only reliable way to see
   // what a delegate gets on a device we cannot inspect.
   engine.rootContext()->setContextProperty(
-      "progressiveDebugDelegate",
-      qEnvironmentVariableIsSet("PROGRESSIVE_DEBUG_DELEGATE"));
+      "pcpDebugDelegate",
+      qEnvironmentVariableIsSet("PCP_DEBUG_DELEGATE"));
   engine.addImageProvider(QLatin1String("mxc"), m_provider);
 
   // FORK-ONLY: keep Qt's application palette in step with the app's own
@@ -317,25 +317,25 @@ int main(int argc, char *argv[]) {
   // instead of patching two dozen call sites, and main.qml calls it again
   // whenever the user flips the setting.
   engine.rootContext()->setContextProperty(
-      "progressiveApplyTheme", new ThemePalette(&engine));
+      "pcpApplyTheme", new ThemePalette(&engine));
 
   engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
-  PROGRESSIVE_STAGE("qml loaded");
+  PCP_STAGE("qml loaded");
   if (engine.rootObjects().isEmpty()) {
-    PROGRESSIVE_STAGE("no root objects, exiting");
+    PCP_STAGE("no root objects, exiting");
     return -1;
   }
 
-  PROGRESSIVE_STAGE("entering event loop");
+  PCP_STAGE("entering event loop");
 
   // FORK-ONLY: in-app screenshot (Ctrl+Shift+S).
   if (auto* window =
           qobject_cast<QQuickWindow*>(engine.rootObjects().first())) {
-    progressiveInstallScreenshotShortcut(window);
-    if (qEnvironmentVariableIsSet("PROGRESSIVE_SCREENSHOT")) {
+    pcpInstallScreenshotShortcut(window);
+    if (qEnvironmentVariableIsSet("PCP_SCREENSHOT")) {
       // Capture once the first frame is on screen.
       QTimer::singleShot(4000, window,
-                         [window] { progressiveSaveScreenshot(window); });
+                         [window] { pcpSaveScreenshot(window); });
     }
   }
 

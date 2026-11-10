@@ -2,7 +2,7 @@
 # Generates a .qrc embedding the static Qt's QML module tree so the app
 # links QtQuick/Controls/etc. into the binary (single-file deployment).
 # Usage: gen-static-qml-qrc.sh <static-qt-prefix> <build-dir>
-# Run BEFORE qmake; progressive-qt.pro picks up $build-dir/qt56-static-qml.qrc.
+# Run BEFORE qmake; pcp-qt.pro picks up $build-dir/qt56-static-qml.qrc.
 set -e
 STATIC_PREFIX="$1"
 BUILDDIR="$2"

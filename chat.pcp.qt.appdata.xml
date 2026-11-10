@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>chat.pcp.qt</id>
+
+  <provides>
+    <binary>pcp-chat</binary>
+  </provides>
+
+  <name>PCP</name>
+  <summary>PCP Matrix client for old devices</summary>
+  <description>
+    <p>
+      PCP is a GPL-3.0-only NeoChat/Spectral rewrite with the goal
+      of running on old devices (Qt 5.6, Android 4.0 down to 2.3) and,
+      in the end, becoming more feature rich.
+    </p>
+    <p>
+      Based on Spectral (Qt 5.10/5.11 era). Authors:
+      https://pcp.chat contributors.
+    </p>
+  </description>
+
+  <url type="homepage">https://pcp.chat</url>
+  <url type="bugtracker">https://github.com/pcp-chat/pcp-qt/issues</url>
+
+  <categories>
+    <category>Matrix</category>
+    <category>Internet</category>
+    <category>Qt</category>
+  </categories>
+
+  <developer_name>https://pcp.chat contributors</developer_name>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+
+  <content_rating type="oars-1.0">
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-audio">intense</content_attribute>
+  </content_rating>
+</component>

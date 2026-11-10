@@ -56,9 +56,9 @@ jobs:
         run: |
           export PATH="$QT56_PREFIX/bin:$PATH"
           mkdir -p desktop-build && cd desktop-build
-          qmake "$GITHUB_WORKSPACE/progressive-qt.pro"
+          qmake "$GITHUB_WORKSPACE/pcp-qt.pro"
           make -j"$(nproc)"
-          ls -la progressive-chat
+          ls -la pcp-chat
 
       - name: Smoke test (offscreen, QML must load clean)
         # Headless runners have no GL, so first paint aborts (same for any
@@ -68,7 +68,7 @@ jobs:
         run: |
           cd desktop-build
           export QT_QPA_PLATFORM=offscreen
-          timeout 20 ./progressive-chat >run.log 2>&1 || true
+          timeout 20 ./pcp-chat >run.log 2>&1 || true
           grep -v "font directory" run.log | tail -n 8 || true
           grep -q "Model timeline reset" run.log
           ! grep "is not installed" run.log | grep -v "Qt.labs.platform" | grep -q .
@@ -76,5 +76,5 @@ jobs:
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
-          name: progressive-chat-qt-linux-arm64
-          path: desktop-build/progressive-chat
+          name: pcp-chat-qt-linux-arm64
+          path: desktop-build/pcp-chat

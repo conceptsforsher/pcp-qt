@@ -1,7 +1,7 @@
 image: Visual Studio 2017
 
 environment:
-  DEPLOY_DIR: Progressive-Chat-%APPVEYOR_BUILD_VERSION%
+  DEPLOY_DIR: PCP-Chat-%APPVEYOR_BUILD_VERSION%
   matrix:
   - QTDIR: C:\Qt\5.11\msvc2017_64
     VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"
@@ -17,14 +17,14 @@ before_build:
   - git submodule update --init --recursive
 
 build_script:
-  - qmake progressive-qt.pro CONFIG+=debug CONFIG+=qml_debug PREFIX="%DEPLOY_DIR%"
+  - qmake pcp-qt.pro CONFIG+=debug CONFIG+=qml_debug PREFIX="%DEPLOY_DIR%"
   - nmake
 
 after_build:
   - nmake install
   - windeployqt --debug --qmldir qml --qmldir imports "%DEPLOY_DIR%\spectral.exe"
-  - 7z a progressive-chat.zip "%DEPLOY_DIR%\"
+  - 7z a pcp-chat.zip "%DEPLOY_DIR%\"
 
 artifacts:
-  - path: progressive-chat.zip
+  - path: pcp-chat.zip
     name: portable

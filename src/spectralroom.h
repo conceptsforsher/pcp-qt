@@ -93,7 +93,7 @@ class SpectralRoom : public Room {
   QString getMIME(const QUrl& fileUrl) const;
   void postFile(const QUrl& localFile, const QUrl& mxcUrl);
 
-  // NOTE (Progressive Chat Qt, fork-only): power-level content JSON.
+  // NOTE (PCP Qt, fork-only): power-level content JSON.
   QJsonObject powerLevelsContent() const;
 
   void checkForHighlights(const QMatrixClient::TimelineItem& ti);
@@ -107,7 +107,7 @@ class SpectralRoom : public Room {
  signals:
   void cachedInputChanged();
   void busyChanged();
-  // NOTE (Progressive Chat Qt): re-declared from QMatrixClient::Room —
+  // NOTE (PCP Qt): re-declared from QMatrixClient::Room —
   // Qt 5.6 moc requires NOTIFY signals to exist in the class itself.
   // Forwarded from the base signal in the constructor below.
   void typingChanged();
@@ -123,10 +123,10 @@ class SpectralRoom : public Room {
   void sendTypingNotification(bool isTyping);
   void sendReply(QString userId, QString eventId, QString replyContent,
                  QString sendContent);
-  // NOTE (Progressive Chat Qt, fork-only): backported from Jul 2019.
+  // NOTE (PCP Qt, fork-only): backported from Jul 2019.
   Q_INVOKABLE void toggleReaction(const QString& eventId,
                                   const QString& reaction);
-  // NOTE (Progressive Chat Qt, fork-only): minimal power-level backport
+  // NOTE (PCP Qt, fork-only): minimal power-level backport
   // (Jan 2020 concepts over the May 2019 lib, see powerlevels.h).
   Q_INVOKABLE int powerLevelForUser(const QString& userId) const;
   Q_INVOKABLE bool canSendEvent(const QString& eventType) const;

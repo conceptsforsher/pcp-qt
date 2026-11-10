@@ -1,10 +1,10 @@
-# Progressive Chat Qt
+# PCP Qt
 
 A Matrix client for old devices — a **NeoChat rewrite** with the goal of
 being **runnable on old devices** and, in the end, also **more feature rich**.
 
 - License: **GPL-3.0-only** (`LICENSE`, SPDX headers).
-- Authors: **https://progressive.chat contributors**.
+- Authors: **https://pcp.chat contributors**.
 - Upstream: [NeoChat](https://invent.kde.org/network/neochat) (KDE),
   via [Spectral](https://gitlab.com/spectral-im/spectral/)
   (`spectral-im/spectral`, first commit Feb 2018).
@@ -20,27 +20,27 @@ At the start, this codebase had the name **Spectral** and it worked on
 This port starts from Spectral tag **464**
 (`8c29382`, Oct 2018, still named Spectral,
 still Qt 5.10+ per `BUILD.md`) and rebrands the client to
-**Progressive Chat**.
+**PCP**.
 
 ## First difference: Qt 5.6 + old Android
 
 Our first difference vs upstream is that the client targets **Qt 5.6**, so it
 is runnable on **Android 4.0 and older, down to 2.3**:
 
-|                | Upstream (Spectral 464) | Progressive Chat Qt      |
+|                | Upstream (Spectral 464) | PCP Qt      |
 |----------------|-------------------------|--------------------------|
 | Qt             | 5.10+                   | **5.6** (5.6.3 recommended) |
 | QML imports    | QtQuick 2.9, Controls 2.2, Layouts 1.3 | QtQuick 2.6, Controls 1.4, Layouts 1.2 |
-| `labs.platform` (Qt ≥ 5.8 only) | used directly (tray icon, StandardPaths) | isolated: tray via lazy `Loader` (`Progressive.Compat.TrayIcon`), cache dir via C++ `QStandardPaths` |
-| C++            | C++14, Qt-5.10-only `invokeMethod` path | keeps the Qt &lt; 5.10 fallback (`src/imageprovider.cpp`), C++14 with C++11 fallback note in `progressive-qt.pro` |
+| `labs.platform` (Qt ≥ 5.8 only) | used directly (tray icon, StandardPaths) | isolated: tray via lazy `Loader` (`PCP.Compat.TrayIcon`), cache dir via C++ `QStandardPaths` |
+| C++            | C++14, Qt-5.10-only `invokeMethod` path | keeps the Qt &lt; 5.10 fallback (`src/imageprovider.cpp`), C++14 with C++11 fallback note in `pcp-qt.pro` |
 | Android        | —                       | `android/AndroidManifest.xml`: minSdk 9 (2.3) → target 14 (4.0) |
-| Branding       | Spectral / ENCOM        | **Progressive Chat**, `chat.progressive.qt`, https://progressive.chat contributors |
+| Branding       | Spectral / ENCOM        | **PCP**, `chat.pcp.qt`, https://pcp.chat contributors |
 
 ## Fork-only changes
 
 Changes that exist only in this fork (not in upstream Spectral/NeoChat):
 
-- **Back button in Settings** (`imports/Progressive/Page/SettingForm.ui.qml`):
+- **Back button in Settings** (`imports/PCP/Page/SettingForm.ui.qml`):
   upstream has no way back from the Settings page except tapping an
   account avatar — with zero accounts configured that is a dead end.
   The fork adds an explicit Back row returning to the room view.
@@ -53,17 +53,17 @@ Details and remaining work (Controls 2 backport on stock Qt 5.6, NDK notes):
 Desktop (Qt 5.6.3):
 
 ```sh
-qmake progressive-qt.pro
+qmake pcp-qt.pro
 make
 ```
 
 Android (Qt 5.6 `androiddeployqt`, NDK r10e):
 
 ```sh
-qmake progressive-qt.pro ANDROID_PACKAGE_SOURCE_DIR=$$PWD/android
+qmake pcp-qt.pro ANDROID_PACKAGE_SOURCE_DIR=$$PWD/android
 make
 make install INSTALL_ROOT=android-build
-androiddeployqt --input android-libprogressive-chat.so-deployment-settings.json \
+androiddeployqt --input android-libpcp-chat.so-deployment-settings.json \
   --output android-build --deployment bundled
 ```
 
@@ -74,7 +74,7 @@ Vendored 2018-era deps (no submodule fetch needed):
 
 ## Authors / license
 
-- Authors: https://progressive.chat contributors.
+- Authors: https://pcp.chat contributors.
 - This program is licensed under GNU General Public License, Version 3 only
   (**GPL-3.0-only**). See `LICENSE` and `AUTHORS`.
 
